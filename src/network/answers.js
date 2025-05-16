@@ -6,7 +6,7 @@ exports.success = function (req, res, message = '', status = '') {
     })
 }
 
-exports.error = function (req, res, message = 'Error, Algo salio mal', status = 500) {
+exports.error = function (req, res, message = 'Error, Algo salio mal', status = 200) {
     res.status(status).send({
         error: true,
         status: status,
