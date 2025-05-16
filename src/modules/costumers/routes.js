@@ -3,10 +3,12 @@ const answer = require('../../network/answers');
 const controller = require('./index');
 const router = express.Router();
 
-router.get('/', GetAll);
-router.get('/:id', GetOne);
-router.put('/', Delete);
-router.post('/', Add);
+const security = require('../users/security'); // o la ruta correcta a tu security.js
+
+router.get('/', security(), GetAll);
+router.get('/:id', security(), GetOne);
+router.post('/', security(), Add);
+router.delete('/', security(), Delete);
 
 async function GetAll(req, res, next)  {
    try {

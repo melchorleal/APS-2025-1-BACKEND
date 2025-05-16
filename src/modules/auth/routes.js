@@ -3,7 +3,7 @@ const answer = require('../../network/answers');
 const controller = require('./index');
 const router = express.Router();
 
-router.get('/Login', Login);
+router.post('/Login', Login);
 
 
  async function Login(req, res, next)  {

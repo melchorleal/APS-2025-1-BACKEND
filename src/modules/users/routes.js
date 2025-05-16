@@ -8,7 +8,6 @@ router.get('/', GetAll);
 router.get('/:id', GetOne);
 router.put('/', Delete);
 
-//Modificar security() para permitir agregar usuarios sin token
 router.post('/', security(), Add);
 
 async function GetAll(req, res)  {
