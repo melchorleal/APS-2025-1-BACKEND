@@ -1,6 +1,14 @@
 require('dotenv').config();
 module.exports={
     app: {
-        port: process.env.PORT,
-    } 
+        port: 3000,
+    },
+
+
+    mysql: {
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'sistema_logistica',
 }
+};
