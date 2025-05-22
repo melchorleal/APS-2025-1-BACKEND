@@ -25,8 +25,6 @@ app.set('port', config.app.port);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //Routes 
-const products = require('./modules/products/routes');
-app.use('/productos', products);
 app.use('/api/costumers', clientes);
 app.use('/api/users', users);
 app.use('/api/authentication', authentication);
