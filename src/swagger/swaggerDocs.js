@@ -36,26 +36,51 @@
  *         id: 1
  *         user: john_doe
  *         password: secure_password123
- *     Customer:
+ *     Product:
  *       type: object
  *       required:
- *         - id
+ *         - nombre
+ *         - peso
+ *         - altura
+ *         - ancho
+ *         - id_categoria
+ *         - pais_origen
+ *         - pais_destino
+ *         - id_medio_transporte
  *       properties:
- *         id:
+ *         nombre:
+ *           type: string
+ *         peso:
+ *           type: number
+ *         altura:
+ *           type: number
+ *         ancho:
+ *           type: number
+ *         id_categoria:
  *           type: integer
- *           description: ID del cliente (0 para nuevo cliente)
+ *         pais_origen:
+ *           type: string
+ *         pais_destino:
+ *           type: string
+ *         id_medio_transporte:
+ *           type: integer
  *       example:
- *         id: 1
- *         nombre: Cliente Ejemplo
- *         email: cliente@ejemplo.com
+ *         nombre: Caja de madera
+ *         peso: 3.5
+ *         altura: 20
+ *         ancho: 15
+ *         id_categoria: 2
+ *         pais_origen: "3"
+ *         pais_destino: "2"
+ *         id_medio_transporte: 1
  * 
  * tags:
  *   - name: Autenticación
  *     description: Operaciones de autenticación de usuarios
  *   - name: Usuarios
  *     description: Operaciones con usuarios
- *   - name: Clientes
- *     description: Operaciones con clientes
+ *   - name: Products
+ *     description: Operaciones relacionadas con productos
  * 
  * /api/authentication/Login:
  *   post:
@@ -167,23 +192,11 @@
  *         description: Usuario no encontrado
  *       500:
  *         description: Error del servidor
- * 
- * /api/costumers:
- *   get:
- *     summary: Obtiene todos los clientes
- *     tags: [Clientes]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de todos los clientes
- *       401:
- *         description: No autorizado
- *       500:
- *         description: Error del servidor
+ *
+ * /api/productos:
  *   post:
- *     summary: Crea o actualiza un cliente
- *     tags: [Clientes]
+ *     summary: Crear un nuevo producto
+ *     tags: [Products]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -191,59 +204,12 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Customer'
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       201:
- *         description: Cliente creado o actualizado exitosamente
- *       401:
- *         description: No autorizado
+ *         description: Producto creado exitosamente
+ *       400:
+ *         description: Datos faltantes o inválidos
  *       500:
- *         description: Error del servidor
- *   delete:
- *     summary: Elimina un cliente
- *     tags: [Clientes]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: integer
- *                 description: ID del cliente a eliminar
- *             example:
- *               id: 1
- *     responses:
- *       200:
- *         description: Cliente eliminado exitosamente
- *       401:
- *         description: No autorizado
- *       500:
- *         description: Error del servidor
- * 
- * /api/costumers/{id}:
- *   get:
- *     summary: Obtiene un cliente específico
- *     tags: [Clientes]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID del cliente
- *     responses:
- *       200:
- *         description: Detalles del cliente
- *       401:
- *         description: No autorizado
- *       404:
- *         description: Cliente no encontrado
- *       500:
- *         description: Error del servidor
+ *         description: Error interno del servidor
  */

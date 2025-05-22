@@ -1,0 +1,203 @@
+-- Crear la base de datos 
+CREATE DATABASE sistema_logistica;
+USE sistema_logistica;
+
+-- Tabla de países
+CREATE TABLE paises (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL
+);
+
+-- Tabla de categorías
+CREATE TABLE categorias (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL
+);
+
+-- Tabla de productos
+CREATE TABLE productos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    peso DECIMAL(10,2),
+    altura DECIMAL(10,2),
+    ancho DECIMAL(10,2),
+    id_categoria INT,
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id)
+);
+
+-- Tabla de medios de transporte
+CREATE TABLE medio_transporte (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    tipo VARCHAR(50) NOT NULL,
+    costo DECIMAL(10,2)
+);
+
+-- Tabla de clientes
+CREATE TABLE clientes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20),
+    correo VARCHAR(100)
+);
+
+-- Tabla de transacciones
+CREATE TABLE transacciones (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    referencia VARCHAR(100),
+    fecha DATE,
+    hora TIME,
+    costo DECIMAL(10,2),
+    ubicacion_actual VARCHAR(100),
+    estado VARCHAR(50),
+    pais_origen INT,
+    pais_destino INT,
+    id_medio_transporte INT,
+    id_cliente INT,
+    FOREIGN KEY (pais_origen) REFERENCES paises(id),
+    FOREIGN KEY (pais_destino) REFERENCES paises(id),
+    FOREIGN KEY (id_medio_transporte) REFERENCES medio_transporte(id),
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id)
+);
+
+-- Tabla intermedia para la relación M:N entre productos y transacciones
+CREATE TABLE producto_transaccion (
+    id_producto INT NOT NULL,
+    id_transaccion INT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (id_producto, id_transaccion),
+    FOREIGN KEY (id_producto) REFERENCES productos(id),
+    FOREIGN KEY (id_transaccion) REFERENCES transacciones(id)
+);
+
+-- Tabla de autenticación
+CREATE TABLE auth (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+-- Tabla de usuarios
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    activo BOOLEAN
+);
+
+
+-- Insertar países
+INSERT INTO paises (nombre) VALUES
+('Estados Unidos'),
+('China'),
+('Canadá'),
+('Alemania'),
+('Japón'),
+('Corea del Sur'),
+('Brasil'),
+('Guatemala'),
+('Reino Unido'),
+('Colombia'),
+('España'),
+('Francia'),
+('Italia');
+
+-- Insertar categorías
+INSERT INTO categorias (nombre) VALUES 
+('Alimentos'),
+('Electrónicos'),
+('Vehículos');
+
+INSERT INTO medio_transporte (tipo, costo) VALUES
+('Aéreo', 78.1),
+('Terrestre', 3.32),
+('Marítimo', 312.3);
+
+-- Insertar productos de alimentos (sin dimensiones)
+INSERT INTO productos (nombre, peso, id_categoria) VALUES
+('Carne de bovino congelada', 15.5, 1),
+('Carne de porcino', 18.2, 1),
+('Carne de aves de corral', 10.8, 1),
+('Pescado fresco', 8.9, 1),
+('Pescado congelado', 14.6, 1),
+('Crustáceos', 12.3, 1),
+('Filetes de pescado', 13.4, 1),
+('Moluscos', 9.5, 1),
+('Langosta', 11.7, 1),
+('Carne de cordero', 16.5, 1),
+('Carne de cabra', 13.7, 1),
+('Filetes de atún', 12.6, 1),
+('Mejillones', 10.2, 1),
+('Avena en hojuelas', 12, 1),
+('Maíz palomero', 10.5, 1),
+('Puré de tomate enlatado', 14, 1),
+('Salsas embotelladas', 9.5, 1),
+('Enlatado de verduras', 13.2, 1),
+('Garbanzos secos', 11, 1),
+('Miel envasada', 7.5, 1),
+('Chocolate en barra', 8.3, 1),
+('Conserva de frutas', 9.2, 1),
+('Sopa en lata', 10, 1);
+
+-- Insertar productos electrónicos (dimensiones separadas en altura y ancho)
+INSERT INTO productos (nombre, altura, ancho, id_categoria) VALUES
+('LG', 23, 12, 2),
+('Sony', 11, 39, 2),
+('Apple', 37, 39, 2),
+('Samsung', 37, 49, 2),
+('LG', 38, 23, 2),
+('Dell', 19, 19, 2),
+('Samsung', 26, 32, 2),
+('Sony', 34, 24, 2),
+('Samsung', 44, 47, 2),
+('Apple', 34, 27, 2),
+('Dell', 50, 40, 2),
+('LG', 38, 23, 2),
+('HP', 13, 40, 2),
+('Apple', 13, 47, 2),
+('Samsung', 14, 39, 2);
+
+-- Insertar productos de vehículos (dimensiones separadas en altura y ancho)
+INSERT INTO productos (nombre, altura, ancho, id_categoria) VALUES
+('Tesla Model 3', 469, 185, 3),
+('Tesla Model S', 497, 196, 3),
+('Tesla Model X', 505, 200, 3),
+('Toyota RAV4', 460, 185, 3),
+('Toyota Corolla', 463, 184, 3),
+('Toyota Camry', 488, 184, 3),
+('Ford F-150', 589, 202, 3),
+('Ford Mustang', 478, 191, 3),
+('Ford Explorer', 504, 200, 3),
+('Nissan Sentra', 464, 181, 3),
+('Nissan Altima', 490, 185, 3),
+('Nissan Frontier', 531, 185, 3),
+('Honda Civic', 476, 180, 3),
+('Honda Accord', 490, 186, 3),
+('Honda CR-V', 463, 185, 3),
+('BMW serie3', 471, 182, 3),
+('BMW Serie 5', 479, 187, 3),
+('BMW X3', 470, 189, 3),
+('Audi Q5', 468, 189, 3),
+('Audi A4', 476, 184, 3),
+('Audi A6', 493, 187, 3),
+('Mercedes Benz Clase C', 475, 182, 3),
+('Mercedes Benz Clase E', 493, 185, 3),
+('Mercedes Benz Clase GLE', 492, 194, 3),
+('Jeep Wrangler', 488, 189, 3),
+('Jeep Cherokee', 464, 185, 3),
+('Jeep Renegade', 423, 180, 3),
+('Hyundai Sonata', 490, 186, 3),
+('Hyundai', 491, 186, 3),
+('Hyundai', 463, 186, 3),
+('Hyundai', 478, 190, 3),
+('Subaru', 487, 189, 3),
+('Subaru', 464, 181, 3),
+('Subaru', 447, 177, 3),
+('Volvo', 470, 190, 3),
+('Volvo', 496, 187, 3),
+('Volvo', 442, 186, 3),
+('Mazda', 457, 184, 3),
+('Mazda', 447, 179, 3),
+('Mazda', 487, 184, 3),
+('Chevrolet', 536, 206, 3),
+('Chevrolet', 493, 185, 3),
+('Chevrolet', 465, 184, 3);
