@@ -79,8 +79,18 @@ function query (Table, consulta){
     });
 
 } 
+function insert(table, data) {
+    return new Promise((resolve, reject) => {
+        const query = `INSERT INTO ${table} SET ?`;
+        connection.query(query, data, (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
+}
 
 module.exports = {
+    insert,
     GetAll,
     GetOne,
     Delete,
