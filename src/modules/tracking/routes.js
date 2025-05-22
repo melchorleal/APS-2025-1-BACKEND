@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {orderTrackingController} = require('./controller');
+const controller = require('./controller');
 
-router.get('/:folio', orderTrackingController);
+router.get('/:folio', controller.orderTrackingController);
 
-
+router.put('/:folio/status', controller.changeTrackingState)
 
 
 
