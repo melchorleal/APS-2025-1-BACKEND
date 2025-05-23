@@ -26,9 +26,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //Routes 
 const products = require('./modules/products/routes');
+const tracking = require('./modules/tracking/routes');
 app.use('/api/productos', products);
 app.use('/api/costumers', clientes);
 app.use('/api/users', users);
+app.use('/api/tracking', tracking);
 app.use('/api/authentication', authentication);
 app.use(error);
 
