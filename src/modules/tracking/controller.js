@@ -27,8 +27,12 @@ const POSSIBLE_STATES = [  // cuidado con los "."
 async function orderTrackingController(req,res){
 
     const { folio } = req.params;
-    const allTransactions = await db.GetAll("transacciones");
-    const transaction = allTransactions.find((  t )=> t.referencia == folio);
+
+    if(!folio){
+        return answers.error(req, res, 'Folio no válido', 400);
+    }
+
+    const transaction = (await executeQuery(`SELECT * FROM transacciones WHERE referencia = '${folio}'`))[0];
     
     if (!transaction) {
         return answers.error(req, res, 'No se encontró la transacción', 404);
