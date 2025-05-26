@@ -32,7 +32,7 @@ async function orderTrackingController(req,res){
         return answers.error(req, res, 'Folio no válido', 400);
     }
 
-    const transaction = (await executeQuery(`SELECT * FROM transacciones WHERE referencia = '${folio}'`))[0];
+    const transaction = (await executeQuery(`SELECT * FROM transacciones WHERE id = '${folio}'`))[0];
     
     if (!transaction) {
         return answers.error(req, res, 'No se encontró la transacción', 404);
@@ -70,10 +70,56 @@ async function changeTrackingState(req, res){
         return answers.error(req, res, 'Estado no válido', 400);
     }
 
-    await executeQuery(`UPDATE transacciones SET estado = '${estado}' WHERE referencia = '${folio}'`);
+    await executeQuery(`UPDATE transacciones SET estado = '${estado}' WHERE id = '${folio}'`);
 
     return answers.success(req, res, 'Estado actualizado', 200);
 }
+
+const formatDate = (date) => {
+  const d = new Date(date);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+async function getAllTransactions(req, res) {
+    try {
+        const query = `
+            SELECT 
+                t.id,
+                t.fecha,
+                t.estado,
+                po.nombre AS pais_origen,
+                pd.nombre AS pais_destino
+            FROM transacciones t
+            LEFT JOIN paises po ON t.pais_origen = po.id
+            LEFT JOIN paises pd ON t.pais_destino = pd.id
+            ORDER BY t.fecha DESC, t.hora DESC;
+        `;
+
+        const transactions = await executeQuery(query);
+
+        if (!transactions || transactions.length === 0) {
+            return answers.success(req, res, [], 200, 'No hay transacciones registradas');
+        }
+
+        const formattedTransactions = transactions.map(transaction => ({
+            fecha: formatDate(transaction.fecha),
+            folio: transaction.id,
+            status: transaction.estado,
+            paisOrigen: transaction.pais_origen || 'Desconocido',
+            paisDestino: transaction.pais_destino || 'Desconocido'
+        }));
+
+        return answers.success(req, res, formattedTransactions, 200, 'Consulta exitosa');
+
+    } catch (error) {
+        console.log('[Error getting all transactions]', error);
+        return answers.error(req, res, 'Error interno del servidor', 500);
+    }
+}
+
 
 
 
@@ -91,5 +137,6 @@ const executeQuery = (query) =>{
 
 module.exports = {
     orderTrackingController,
-    changeTrackingState
+    changeTrackingState,
+    getAllTransactions
 };

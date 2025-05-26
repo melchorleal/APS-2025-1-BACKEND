@@ -95,5 +95,5 @@ module.exports = {
     GetOne,
     Delete,
     Add,
-    query
+    query,
 }

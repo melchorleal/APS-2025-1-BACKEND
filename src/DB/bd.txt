@@ -43,7 +43,6 @@ CREATE TABLE clientes (
 -- Tabla de transacciones
 CREATE TABLE transacciones (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    referencia VARCHAR(100),
     fecha DATE,
     hora TIME,
     costo DECIMAL(10,2),
@@ -99,7 +98,8 @@ INSERT INTO paises (nombre) VALUES
 ('Colombia'),
 ('España'),
 ('Francia'),
-('Italia');
+('Italia'),
+('México');
 
 -- Insertar categorías
 INSERT INTO categorias (nombre) VALUES 
