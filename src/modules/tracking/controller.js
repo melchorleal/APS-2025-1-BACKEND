@@ -32,17 +32,35 @@ async function orderTrackingController(req,res){
         return answers.error(req, res, 'Folio no válido', 400);
     }
 
-    const transaction = (await executeQuery(`SELECT * FROM transacciones WHERE id = '${folio}'`))[0];
+    const transaction = (await executeQuery(` 
+            SELECT 
+            t.id as folio,
+            t.estado,
+            t.fecha,
+            t.hora,
+            po.nombre as pais_origen,
+            pd.nombre as pais_destino,
+            t.costo
+        FROM 
+            transacciones t
+        INNER JOIN 
+            paises po ON t.pais_origen = po.id
+        INNER JOIN 
+            paises pd ON t.pais_destino = pd.id
+            WHERE t.id = '${folio}'`))[0];
     
     if (!transaction) {
         return answers.error(req, res, 'No se encontró la transacción', 404);
     }
-
+    console.log(transaction)
     const response = {
         folio,
         estatus: transaction.estado,
         fecha: new Date(transaction.fecha).toDateString(),
         hora: transaction.hora,
+        paisOrigen: transaction.pais_origen || 'Desconocido',
+        paisDestino: transaction.pais_destino || 'Desconocido',
+        costo: transaction.costo
     }
 
     return answers.success(req, res, response, 200, 'Consulta exitosa', 200);
